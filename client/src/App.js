@@ -49,6 +49,7 @@ class App extends Component {
       return piece.cost === pieceCost;
     });
   }
+  //like a Set
   getUniqueTeam = (team) =>{
     let newTeam =[];
     //loop team to check evey piece 
@@ -80,6 +81,7 @@ getEffects = () =>{
        effects.includes(effect) || effects.push(effect);
     })
   })
+  //count effects
  let effectsCount = [];
   effects.forEach(effect => {
     let filteredTeam = team.filter(function (piece) {
@@ -87,10 +89,11 @@ getEffects = () =>{
     });
     effectsCount.push(filteredTeam.length);
   })
-  console.log(effects);
-  console.log(effectsCount);
-  
-  
+  let teamEffects = [];
+  effects.forEach(effect=>{
+      teamEffects.push([effect,effectsCount[effects.indexOf(effect)]]);
+  })
+  return teamEffects;
 }
   render() {
     const cost = [1, 2, 3, 4, 5, 7];
@@ -124,7 +127,7 @@ getEffects = () =>{
             })}
             </div>
             <div id="teamEffects">
-              effects
+              {this.getEffects()}
             </div>
           </div>
         </div>
