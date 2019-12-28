@@ -29,18 +29,32 @@ class App extends Component {
     team: [{
       name: "Neeko",
       effects: ["Woodland","Druid"],
-      cost: 2
     },
     {
       name: "Neeko",
       effects: ["Woodland","Druid"],
-      cost: 2
     },
     {
+      name: "Neeko",
+      effects: ["Woodland","Druid"],
+    },{
       name: "LeBlanc",
       effects: ["Woodland","Assassin", "Mage"],
       cost: 2
-    },],
+    },{
+      name: "LeBlanc",
+      effects: ["Woodland","Assassin", "Mage"],
+      cost: 2
+    },{
+      name: "LeBlanc",
+      effects: ["Woodland","Assassin", "Mage"],
+      cost: 2
+    },{
+      name: "Ivern",
+      effects: ["Woodland","Druid"],
+      cost: 1
+    },
+      ],
     effects: [],
     piecesLimit: 9
   }
@@ -49,51 +63,42 @@ class App extends Component {
       return piece.cost === pieceCost;
     });
   }
-  //like a Set
-  getUniqueTeam = (team) =>{
-    let newTeam =[];
-    //loop team to check evey piece 
-    team.forEach(piece=>{
-        //loop new team to check existence
-        if (newTeam.length === 0) {
-            newTeam.push(piece);
-        } else {
-          newTeam.forEach(teamPiece =>{
-            teamPiece.name === piece.name || newTeam.push(piece);
-          })
-        }
-       
-    })
-    return newTeam;
-  }
  
 getEffects = () =>{
-  let team = Array.from(this.getUniqueTeam(this.state.team));
-  //effects contains all unique effects from unique team
-  
-  
-  let effects = [];
-  //loop through unqiue team pieces to get effects
-  team.forEach(piece=>{
-
-    //loop through piece effect to find new effect or add count to existing effect
-    piece.effects.forEach(effect=>{
-       effects.includes(effect) || effects.push(effect);
+  let team = this.state.team;
+    //loop through the team 
+  let names =[];
+    team.forEach(piece=>{
+      names.includes(piece.name) || names.push(piece.name);
     })
+    console.log(names);
+    //teamEffects contains all the effects
+    let teamEffects =[];
+   let pieces = this.state.pieces;
+   pieces.forEach(piece =>{
+     names.includes(piece.name) && (teamEffects = teamEffects.concat(piece.effects));
+   })
+  console.log(teamEffects);
+  // get unique effect names 
+  let effectNames = [];
+  teamEffects.forEach(effect =>{
+    effectNames.includes(effect) || effectNames.push(effect);
   })
+  let count = [];
   //count effects
- let effectsCount = [];
-  effects.forEach(effect => {
-    let filteredTeam = team.filter(function (piece) {
-        return piece.effects.includes(effect);
-    });
-    effectsCount.push(filteredTeam.length);
+  effectNames.forEach(effect =>{
+    //loop teameffects and count 
+    let num = 0;
+    teamEffects.forEach(name =>{
+     effect === name && num ++;
+    })
+    //end count
+    count.push(num);
   })
-  let teamEffects = [];
-  effects.forEach(effect=>{
-      teamEffects.push([effect,effectsCount[effects.indexOf(effect)]]);
-  })
-  return teamEffects;
+  console.log(effectNames);
+  console.log(count);
+  
+  
 }
   render() {
     const cost = [1, 2, 3, 4, 5, 7];
@@ -127,7 +132,17 @@ getEffects = () =>{
             })}
             </div>
             <div id="teamEffects">
-              {this.getEffects()}
+              {/* {this.getEffects().map(effect=>{
+                return <div className="effect">
+                    <div className="effect-count">
+                      {effect[1]}
+                      </div>
+                      <div className="effect-name">
+                        {effect[0]}
+                      </div>
+
+                </div>
+              })} */}
             </div>
           </div>
         </div>
