@@ -12,8 +12,13 @@ if (process.env.NODE_ENV === "production") {
 }
 app.use(routes);
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/tftDB");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/tftDB",{ useNewUrlParser: true });
 
+const connection  = mongoose.connection;
+
+connection.once('open',()=>{
+  console.log("DB connected");
+});
 // Start the API server
 app.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);

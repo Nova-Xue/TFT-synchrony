@@ -1,63 +1,41 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import utils from "./utils";
 class App extends Component {
 
   state = {
-    pieces: [
-      {
-        name: "Maokai",
-        effects: ["Woodland","Druid"],
-        cost: 1
-      },
-      {
-        name: "Ivern",
-        effects: ["Woodland","Druid"],
-        cost: 1
-      },
-      {
-        name: "LeBlanc",
-        effects: ["Woodland","Assassin", "Mage"],
-        cost: 2
-      },
-      {
-        name: "Neeko",
-        effects: ["Woodland","Druid"],
-        cost: 2
-      }
-    ],
-    team: [{
-      name: "Neeko",
-      effects: ["Woodland","Druid"],
-    },
-    {
-      name: "Neeko",
-      effects: ["Woodland","Druid"],
-    },
-    {
-      name: "Neeko",
-      effects: ["Woodland","Druid"],
-    },{
-      name: "LeBlanc",
-      effects: ["Woodland","Assassin", "Mage"],
-      cost: 2
-    },{
-      name: "LeBlanc",
-      effects: ["Woodland","Assassin", "Mage"],
-      cost: 2
-    },{
-      name: "LeBlanc",
-      effects: ["Woodland","Assassin", "Mage"],
-      cost: 2
-    },{
-      name: "Ivern",
-      effects: ["Woodland","Druid"],
-      cost: 1
-    },
-      ],
+    pieces: [],
+    team: [],
     effects: [],
     piecesLimit: 9
   }
+  componentDidMount (){
+    //axios to get all the pieces
+    this.loadPieces();
+  }
+  loadPieces = () =>{
+    utils.getPieces()
+      .then(res => 
+        this.setState({
+          pieces : res.data
+        }))
+      .catch();
+  }
+  addToTeam = (e) =>{
+    //get event
+      e.preventDefault();
+    //get clicked piece name
+      const name = e.target.id;
+      console.log(name);
+      
+    //add to the team 
+    let newTeam = this.state.team.concat([name]);
+      console.log(newTeam);
+    this.setState({
+      team : newTeam
+    })
+      
+    }
   costFilter = pieceCost => {
     return this.state.pieces.filter(function (piece) {
       return piece.cost === pieceCost;
@@ -65,13 +43,8 @@ class App extends Component {
   }
  
 getEffects = () =>{
-  let team = this.state.team;
-    //loop through the team 
-  let names =[];
-    team.forEach(piece=>{
-      names.includes(piece.name) || names.push(piece.name);
-    })
-    console.log(names);
+  //get all the piece names
+  let names = this.state.team;
     //teamEffects contains all the effects
     let teamEffects =[];
    let pieces = this.state.pieces;
@@ -118,7 +91,7 @@ getEffects = () =>{
                   </div>
 
                   {this.costFilter(pieceCost).map(piece => {
-                    return <div className="piece">{piece.name}</div>
+                    return <div className="piece" id={piece.name} onClick={(e)=>this.addToTeam(e)}>{piece.name}</div>
                   })}
                 </div>
               })
